@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "576841779735",
+    "firebase_url": "https://basari-f6b13.firebaseio.com",
+    "project_id": "basari-f6b13",
+    "storage_bucket": "basari-f6b13.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576841779735:android:7e7e6e47c81621379e6a52",
+        "android_client_info": {
+          "package_name": "com.prodevdz.basari"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "576841779735-8ddi0v17uhlbfpv7a3op3b5d3duot3qb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvkg-JFcghBcd-lxTY2FRlGRLVbOTfq2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576841779735-8ddi0v17uhlbfpv7a3op3b5d3duot3qb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

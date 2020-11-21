@@ -1,0 +1,42 @@
+name: basari
+description: Aveugle personne apk
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.0
+  flutter_tts: ^1.2.7
+  firebase_core: ^0.5.2
+  firebase_auth: ^0.18.3
+  provider: ^4.3.2+2
+  shared_preferences: ^0.5.12+4
+  permission_handler: ^5.0.1+1
+  contacts_service: ^0.4.6
+  sensors: ^0.4.2+6
+  shake: ^0.1.0
+  after_layout: ^1.0.7+2
+  swipedetector: ^1.2.0
+  cloud_firestore: ^0.14.3
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  assets:
+    - data/country_phone_codes.json
+    - assets/images/
+  uses-material-design: true
+
+
