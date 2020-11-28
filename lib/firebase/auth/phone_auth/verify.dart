@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../chat/lets_text.dart';
+import '../../../chat/contact_screen.dart';
 import '../../../providers/phone_auth.dart';
 import '../../../utils/widgets.dart';
 import 'package:provider/provider.dart';
@@ -256,7 +256,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
             .message}");
     await Future.delayed(Duration(seconds: 1));
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (BuildContext context) => LetsChat()));
+        .push(MaterialPageRoute(builder: (BuildContext context) => ContactScreen()));
   }
 
   onFailed() {

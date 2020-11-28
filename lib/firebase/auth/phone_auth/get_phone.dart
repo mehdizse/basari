@@ -208,8 +208,6 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
     final phoneAuthDataProvider = Provider.of<PhoneAuthDataProvider>(context, listen: false);
     phoneAuthDataProvider.loading = true;
     var countryProvider = Provider.of<CountryProvider>(context, listen: false);
-    print(countryProvider.selectedCountry.dialCode);
-    print(phoneAuthDataProvider.phone);
     bool validPhone = await phoneAuthDataProvider.instantiate(
         dialCode: countryProvider.selectedCountry.dialCode,
         onCodeSent: () {

@@ -66,7 +66,6 @@ class PhoneAuthDataProvider with ChangeNotifier {
     this.onFailed = onFailed;
     this.onError = onError;
     this.onAutoRetrievalTimeout = onAutoRetrievalTimeout;
-    print(phoneNumberController.text);
     if (phoneNumberController.text.length < 9) {
       return false;
     }
@@ -114,9 +113,6 @@ class PhoneAuthDataProvider with ChangeNotifier {
 
       FireBase.auth.signInWithCredential(auth).then((UserCredential value) {
         if (value.user != null) {
-          print(value.user.uid);
-          print(value.user.phoneNumber);
-          print(value.user.email);
           _addStatusMessage('تم تسجيل الدخول بنجاح');
           _addStatus(PhoneAuthState.Verified);
           if (onVerified != null) onVerified();
@@ -162,11 +158,8 @@ class PhoneAuthDataProvider with ChangeNotifier {
         _auth.signInWithCredential(_authCredential)
           .then((UserCredential result) async {
       _addStatusMessage('تسجيل الدخول بنجاح');
-      print(result.user.phoneNumber);
-      print(result.user.email);
-      print(result.user.uid);
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('id', "${result.user.phoneNumber}");
+      prefs.setString('id', "${result.user.uid}");
       _addStatus(PhoneAuthState.Verified);
       if (onVerified != null) onVerified();
     }).catchError((error) {

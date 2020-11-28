@@ -6,9 +6,7 @@ import 'package:flutter/widgets.dart' show TextEditingController, debugPrint;
 import '../data_models/country.dart';
 
 class CountryProvider with ChangeNotifier {
-  /// loading countries data from json
-  /// setting up listeners
-  ///
+
   CountryProvider() {
     loadCountriesFromJSON();
     searchController.addListener(_search);
@@ -17,11 +15,6 @@ class CountryProvider with ChangeNotifier {
   List<Country> _countries = [];
 
   List<Country> get countries => _countries;
-
-//  set countries(List<Country> value) {
-//    _countries = value;
-//    notifyListeners();
-//  }
 
   List<Country> _searchResults = [];
 
@@ -68,8 +61,6 @@ class CountryProvider with ChangeNotifier {
     }
   }
 
-  ///  This will be the listener for searching the query entered by user for their country, (dialog pop-up),
-  ///  searches for the query and returns list of countries matching the query by adding the results to the sink of [searchResults]
   void _search() {
     String query = searchController.text;
     print(query);
@@ -82,7 +73,6 @@ class CountryProvider with ChangeNotifier {
           _results.add(c);
       });
       searchResults = _results;
-      print("results length: ${searchResults.length}");
 //      print('added few countries based on search ${searchResults.length}');
     }
   }

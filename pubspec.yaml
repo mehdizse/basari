@@ -27,6 +27,8 @@ dependencies:
   after_layout: ^1.0.7+2
   swipedetector: ^1.2.0
   cloud_firestore: ^0.14.3
+  carousel_slider: ^2.3.1
+  rxdart: ^0.24.1
 
 
 dev_dependencies:

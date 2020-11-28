@@ -1,4 +1,5 @@
-import 'package:basari/chat/lets_text.dart';
+import 'package:basari/chat/contact_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -9,7 +10,12 @@ import 'package:provider/provider.dart';
 import 'firebase/auth/phone_auth/get_phone.dart';
 import 'dart:io' show Platform;
 
-void main() => runApp(FireApp());
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(FireApp());
+}
 
 class FireApp extends StatefulWidget {
 
@@ -23,7 +29,10 @@ class _FireAppState extends State<FireApp> {
   void initState(){
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      id = prefs.getString('id') ?? '';
+      setState(() {
+        id = prefs.getString('id') ?? '';
+      });
+
       print(id);
       if(id!=''){
         if (await Permission.contacts.request().isGranted) {
@@ -56,7 +65,7 @@ class _FireAppState extends State<FireApp> {
             Locale("ar", "AE"), // OR Locale('ar', 'AE') OR Other RTL locales
           ],
           locale: Locale("ar", "AE"),
-          home: id==""?PhoneAuthGetPhone():LetsChat(),
+          home: id==""?PhoneAuthGetPhone():ContactScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );
