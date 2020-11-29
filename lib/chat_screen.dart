@@ -1,24 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:after_layout/after_layout.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sensors/sensors.dart';
+import 'package:after_layout/after_layout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'contact_screen.dart';
-import 'dart:async';
-
+import 'home.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String peerId;
 
-  ChatScreen({@required this.peerId});
 
   @override
   _ChatScreenState createState() => new _ChatScreenState();
 }
+enum TtsState { playing, stopped, paused, continued }
 
 class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScreen>{
   String _swipeDirection = "";
@@ -27,21 +21,11 @@ class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScree
   var myDynamicAspectRatio = 1000 / 1;
   TabController _tabController;
   dynamic ttsState;
-  int i=1;
   List<double> _userAccelerometerValues;
   List<StreamSubscription<dynamic>> _streamSubscriptions = <StreamSubscription<dynamic>>[];
   double x1=0.0,y1=0.0,z1=0.0;
   double x2=0.0,y2=0.0,z2=0.0;
-  bool lecture=false;
-  SharedPreferences prefs;
-  String id;
-  List<String> messages=[];
-  final databaseReference = FirebaseFirestore.instance;
-  List<String> initMessage=[],initMessageId=[];
-  bool lect=true;
-  CollectionReference reference;
-  bool msg=true;
-  Route route = MaterialPageRoute(builder: (context) =>ChatScreen());
+
 
   @override
   void setState(fn) {
@@ -50,31 +34,38 @@ class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScree
     }
   }
 
-
-  Future checkFirstSeen() async {
+    Future checkFirstSeen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _seen2 = (prefs.getBool('seen2') ?? false);
+    bool _seen2 = (prefs.getBool('seenChat') ?? false);
     print(_seen2);
     if (_seen2) {
 
     } else {
-      await prefs.setBool('seen2', true);
-      _speak(
-          ' مرحبا بك في صفحة الرسائل. تستطيع عبر هذه الصفحة إرْسَال رسائل كتابية قم بالضغط علي الحروف و سنقرؤها لْك , لقراءة الرسالة المكتوبة اسحب الشاشة للاعلي , لبعث الرسالة اسحب الشاشة مرة اخري للاعلي , لحدف اخر حرف اسحب الشاشة للاسفل , و لاضافة فراغ اضغط ضغطة مطولة علي الشاشة');
+      await prefs.setBool('seenChat', true);
+_speak(' مَرْحَبًَا بِكَ فِي لَوْحَةِ الْمَفَاتِيحِ، اللَّوْحَةُ مُقَسَّمَةٌ لِأَرْبَعَةِ صَفَحَات، وَ كُلَّ صَفْحَةِ مُقَسَّمَةٌبالتَّساوي لِتُسْعَةِ أَجْزَاءٍ أَوْ مُرَبَّعاتٌ يَحْتَوِي كُلُّ مَرَبَعٍ عَلَى حَرْفٍ مِنْ حُروفِ الأَبْجَدِيَّةِ الْعَرَبِيَّةَ، مُرَتبََةٌ حَسَبِ التَّرْتِيبِ الْأبْجَدِيِّ مِنَ الْيَمِينِ إِلَى الْيَسَارِ هَذَا يَعْنِي أَنَّ أَوَّلَ حَرْفٍ مِنَ الأَبَجَدِيَّة، حَرْفَ الْأَلِفْ سَيَكُونُ أقْصَى يَمِينَ أَعْلَى الشَّاشَةِ، بِنَفْسُ التَّرْتِيبِ سَيَكُونُ حَرْفُ الذَّالِ، تَاسِعُ حَرْفٍ فِي الأَبَجَدِيَّة وَ آخِّرُ حَرْفٍ فِي الصَّفْحَةِ الْأوْلَى، أَقْصَى يَسَارُ أَسْفَلِ الشَّاشَةِ. بَاقِيُّ الْحُروفِ مُوَزَّعَةٌ فِي بَاقِيُّ الصَّفَحات بِنَفْسُ التَّرْتِيبِ وَ الشَّكْلُ . يُمْكِنُكَ السَّحْبُ اُفقِيَّا لِتَغْيِيرِ الصَّفْحَةِ. آخِّرُ صَفْحَةً تَحْوِي آخِّرُ حَرْفٍ مِنْ حُروفِ الأَبْجَدِيَّةِ ، حَرْفَ الْيَاء وَبَعْدَهَا تَأْتِي مُشْتَقَّاتٌ الْأَلِفُ بِالتَّرْتِيبِ . التَّالِي. هَمْزَةً.الْأَلِفُ الْمَكسورَةُ. الْأَلِفُ بِالْهَمْزَةِ . الْأَلِفُ الْمَقْصُورَةُ. الْأَلِفُ الْمَقْصُورَةُ بِالْهَمْزَةِ.وَ الْوَاو بِالْهَمْزَةِ إِذَا نَسِيتَ هَذِهِ الْمَعْلُومَاتِ هَزَّ الْهَاتِفُ وَ سَنُذَكِّرُكَ');
 
     }
   }
 
+
   Widget createButton(String word){
     return  InkWell(
       onTap: (){
-        _speak(word);
+        if(word=="ى" ){
+          _speak(" الألف المقصورة");
+        }else if(word=="إ"){
+          _speak(" الْأَلِفُ المكسورة");
+        }else{
+          _speak(word);
+        }
         s=s+word;
         print(s);
       },
+      
+        
       child: Container(
         margin: EdgeInsets.all(5),
-        color: Colors.grey,
+        color: Colors.black,
         child: Center(
           child: Text(
             '$word',
@@ -89,7 +80,6 @@ class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScree
 
   @override
   initState() {
-    reference=FirebaseFirestore.instance.collection('messages');
     super.initState();
     _streamSubscriptions
         .add(userAccelerometerEvents.listen((UserAccelerometerEvent event) {
@@ -97,51 +87,13 @@ class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScree
         _userAccelerometerValues = <double>[event.x, event.y, event.z];
       });
     }));
-
-    readLocal();
     initTts();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      reference.where('idTo', isEqualTo: id)
-          .where('idFrom',isEqualTo: widget.peerId)
-          .where('read', isEqualTo: 0)
-          .snapshots()
-          .listen((querySnapshot) async {
-            initMessage=[];
-            initMessageId=[];
-        querySnapshot.docChanges.forEach((change) {
-            setState(() {
-              initMessage.add(change.doc.data()['content']);
-              initMessageId.add(change.doc.id);
-            });
-        });
-        int i = 0;
-        FlutterTts flutterTts = FlutterTts();
-        if(initMessage.length>0 && route.isCurrent && route.isActive) {
-          await flutterTts.speak("رسائلك الجديدة  ");
-        await flutterTts.speak(initMessage[i]);
-        flutterTts.setCompletionHandler(() async {
-          if (i < initMessage.length - 1) {
-            i++;
-            await flutterTts.speak(initMessage[i]);
-          }
-        });
-          for(int i=0;i<initMessage.length;i++){
-            FirebaseFirestore.instance.collection("messages")
-                .doc(initMessageId[i])
-                .update({'read': 1})
-                .then((value) => print("Message Updated"))
-                .catchError((error) => print("Failed to update user: $error"));
-          }
-        }
-      });
-
-    });
   }
 
   initTts() {
     flutterTts = FlutterTts();
     flutterTts.setLanguage("ar");
-    flutterTts.setSpeechRate(0.72);
+    flutterTts.setSpeechRate(0.76);
     flutterTts.setStartHandler(() {
       setState(() {
         print("playing");
@@ -187,39 +139,7 @@ class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScree
     }
   }
 
-  readLocal() async {
-    prefs = await SharedPreferences.getInstance();
-    id = prefs.getString('id') ?? '';
-
-  }
-
-
-  Future<void> onSendMessage(String content, int type) async {
-
-    if (content.trim() != '') {
-      DocumentReference ref = await FirebaseFirestore.instance.collection("messages").add({
-        'idFrom': id,
-        'idTo': widget.peerId,
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        'content': content,
-        'type': type,
-        'read':0
-      });
-      print(ref.id);
-      _speak("تم ارسال الرسالة بنجاح");
-      setState(() {
-        s="";
-      });
-    } else {
-
-    }
-  }
-  Future<bool> fetchData() => Future.delayed(Duration(seconds: 1), () {
-    debugPrint('Step 2, fetch data');
-    return true;
-  });
-
-  @override
+    @override
   void afterFirstLayout(BuildContext context) => checkFirstSeen();
 
   @override
@@ -235,26 +155,24 @@ class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScree
       y1=_userAccelerometerValues[1];
       z1=_userAccelerometerValues[2];
     }
-    if(i==1){
-      if(x2-x1>3.5 || y2-y1>3.5){
-        _speak("اِسحَب عمودياً للتنقل بين الحروف. اٌنقُر مرة للضغط علي الحروف. و قم بالسحب للاعلي لقراءة الرسالة و مرة اخري لارسال الرسالة,  ضغطة مطولة لاضافة فراغ  و سحبة للاسفل لحدف الحروف");
-      }
+    if(x2-x1>3.5 || y2-y1>3.5){
+          _speak(" اِسحَب أُفُقِيّا للتنقل بين الحروف. اٌنقُر مرة للضغط على الحروف. و قم بِالسَّحْب  للاعلى لقراءة الرسالة و مرة أخرى لارسال الرسالة,  ضغطة مطولة لِإِضَافَة فراغ  و سحبة لِلْأَسْفَل لحدف آخِرِ حَرْفٍ .آخر صفحة تحوي آخر حرفٍ من حروفِ الأبجدية، حرف الياء وبعدها تأتي مشتقات الألف بالترتيب التالي. الْهَمْزَة .الألف المكسورة. الألف بالهمزة. الألف المقصورة. الألف المقصورة بالهمزة. و الواو بالهمزة");
     }
+
     double height=MediaQuery.of(context).size.height;
-    return WillPopScope(
-        onWillPop: (){
-      return Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ContactScreen()),
-      );
-    },
-    child: DefaultTabController(
+    return DefaultTabController(
       length: 4,
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: Column(
           children: [
             Container(
               height: MediaQuery.of(context).size.height,
               child: GestureDetector(
+                  onDoubleTap: () {
+                    Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                        builder: (context) => new Home()));
+                  },
                 onLongPress: (){
                   s=s+' ';
                   print(s);
@@ -268,7 +186,9 @@ class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScree
                     });
                       if (s.length > 0) {
                         _speak("$s");
-                        onSendMessage(s, 0);
+                        setState(() { 
+                          s="";
+                        });
                       } else {
                         _speak("الرسالة فارغة");
                       }
@@ -354,14 +274,11 @@ class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScree
                           // Generate 100 widgets that display their index in the List.
                           children:[
                             createButton("ي"),
-                            createButton("1"),
-                            createButton("2"),
-                            createButton("3"),
-                            createButton("4"),
-                            createButton("5"),
-                            createButton("6"),
-                            createButton("7"),
-                            createButton("8"),
+                            createButton("ء"),
+                            createButton("إ"),
+                            createButton("ى"),
+                            createButton("ئ"),
+                            createButton("ؤ"),
                           ],
                         ),
                       ] ),
@@ -370,7 +287,7 @@ class _ChatScreenState extends State<ChatScreen> with AfterLayoutMixin<ChatScree
           ],
         ),
       ),
-    ));
+    );
   }
 }
 

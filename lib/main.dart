@@ -1,62 +1,39 @@
-import 'package:basari/chat/contact_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'Demo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'providers/countries.dart';
-import 'providers/phone_auth.dart';
-import 'package:provider/provider.dart';
-import 'firebase/auth/phone_auth/get_phone.dart';
-import 'dart:io' show Platform;
 
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(FireApp());
+void main() {
+  runApp(MyApp());
 }
 
-class FireApp extends StatefulWidget {
+class MyApp extends StatefulWidget {
 
   @override
-  _FireAppState createState() => _FireAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
-class _FireAppState extends State<FireApp> {
-  String id="";
-  @override
+class _MyAppState extends State<MyApp> {
+
+
+
+
+    @override
   void initState(){
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      setState(() {
-        id = prefs.getString('id') ?? '';
-      });
-
-      print(id);
-      if(id!=''){
-        if (await Permission.contacts.request().isGranted) {
-          // Either the permission was already granted before or the user just granted it.
-        }
-      }
+        Map<Permission, PermissionStatus> statuses = await [
+        Permission.location,
+        Permission.locationAlways,
+      ].request();
+      print(statuses[Permission.location]);
     });
-
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => CountryProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => PhoneAuthDataProvider(),
-        ),
-      ],
-      child: MaterialApp(
-        localizationsDelegates: [
+    return MaterialApp(
+      title: 'Basari',
+      localizationsDelegates: [
           GlobalCupertinoLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -65,9 +42,9 @@ class _FireAppState extends State<FireApp> {
             Locale("ar", "AE"), // OR Locale('ar', 'AE') OR Other RTL locales
           ],
           locale: Locale("ar", "AE"),
-          home: id==""?PhoneAuthGetPhone():ContactScreen(),
-        debugShowCheckedModeBanner: false,
-      ),
+      theme: ThemeData(),
+      home: Splash(),
     );
   }
 }
+
